@@ -4,7 +4,7 @@ import Html
 
 
 upperCase : String -> String
-upperCase name =
+upperCase name maxLength =
     if String.length name > 10 then
         String.toUpper name
     else
@@ -22,4 +22,5 @@ user2 =
 
 main : Html.Html msg
 main =
-    Html.text user 
+    user
+        |> Html.text
