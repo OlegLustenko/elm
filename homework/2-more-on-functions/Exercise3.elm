@@ -2,11 +2,12 @@ module Main exposing (..)
 
 import Html
 import String
+import List
 
 
 wordCount =
     String.words >> List.length
-
+    -- >> - is composition
 
 main : Html.Html msg
 main =

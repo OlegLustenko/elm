@@ -1,22 +1,113 @@
-var _user$project$Main$wordCount = function (_p0) {
-	return _elm_lang$core$List$length(
-		_elm_lang$core$String$words(_p0));
+var _user$project$Main$initModel = {totalCalories: 0, inputState: ''};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'AddCalorie':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						totalCalories: model.totalCalories + A2(
+							_elm_lang$core$Maybe$withDefault,
+							0,
+							_elm_lang$core$Result$toMaybe(
+								_elm_lang$core$String$toInt(model.inputState))),
+						inputState: ''
+					});
+			case 'UpdateInputState':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{inputState: _p0._0});
+			default:
+				return _user$project$Main$initModel;
+		}
+	});
+var _user$project$Main$Model = F2(
+	function (a, b) {
+		return {inputState: a, totalCalories: b};
+	});
+var _user$project$Main$UpdateInputState = function (a) {
+	return {ctor: 'UpdateInputState', _0: a};
 };
-var _user$project$Main$main = _elm_lang$virtual_dom$Native_VirtualDom.staticProgram(
-	function () {
-		var sentence = 'Elm is pretty functional programming language. When I\'m improve in Elm, I\'m understand FP better';
-		return function (length) {
-			return _elm_lang$html$Html$text(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'sentence: ',
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						sentence,
+var _user$project$Main$Clear = {ctor: 'Clear'};
+var _user$project$Main$AddCalorie = {ctor: 'AddCalorie'};
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h3,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							' with length: ',
-							_elm_lang$core$Basics$toString(length)))));
-		}(
-			_user$project$Main$wordCount(sentence));
-	}());
+							'Total Calories: ',
+							_elm_lang$core$Basics$toString(model.totalCalories))),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$type_('text'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$UpdateInputState),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$value(model.inputState),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$type_('button'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$AddCalorie),
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Add'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$type_('button'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Clear),
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Clear'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$Main$main = _elm_lang$html$Html$beginnerProgram(
+	{model: _user$project$Main$initModel, update: _user$project$Main$update, view: _user$project$Main$view})();
