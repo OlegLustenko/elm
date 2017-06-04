@@ -7,18 +7,35 @@ import String
 
 
 -- Model
+-- type alias Model =
+--     { inputState : String
+--     , totalCalories : Int
+--     }
 
 
 type alias Model =
-    { inputState : String
+    { input : Int
     , totalCalories : Int
+    , error : Maybe String
     }
+
+
+
+--     { inputState : String
+--     , totalCalories : Int
+--     }
+-- initModel : Model
+-- initModel =
+--     { totalCalories = 0
+--     , inputState = ""
+--     }
 
 
 initModel : Model
 initModel =
-    { totalCalories = 0
-    , inputState = ""
+    { input = 0
+    , totalCalories = 0
+    , error = Nothing
     }
 
 
@@ -35,22 +52,37 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        AddCalorie ->
-            { model
-                | totalCalories = model.totalCalories + (String.toInt model.inputState |> Result.toMaybe |> Maybe.withDefault 0)
-                , inputState = ""
-            }
-
         UpdateInputState newValue ->
-            { model
-                | inputState = newValue
-            }
+            case String.toInt newValue of
+                Ok input ->
+                    { model | input = input, error = Nothing }
+
+                Err err ->
+                    { model | input = 0, error = Just err }
 
         Clear ->
             initModel
 
+        AddCalorie ->
+            { model
+                | totalCalories = model.input
+                , input = 0
+            }
 
 
+
+-- case msg of
+--     AddCalorie ->
+--         { model
+--             | totalCalories = model.totalCalories + (String.toInt model.inputState |> Result.toMaybe |> Maybe.withDefault 0)
+--             , inputState = ""
+--         }
+--     UpdateInputState newValue ->
+--         { model
+--             | inputState = newValue
+--         }
+--     Clear ->
+--         initModel
 --
 
 
@@ -59,8 +91,20 @@ view model =
     div []
         [ h3 []
             [ text ("Total Calories: " ++ toString model.totalCalories) ]
-        , input [ type_ "text", onInput UpdateInputState, value model.inputState ]
+        , input
+            [ type_ "text"
+            , onInput UpdateInputState
+            , value
+                (if model.input == 0 then
+                    ""
+                 else
+                    toString model.input
+                )
+            ]
             []
+        , div
+            []
+            [ text (Maybe.withDefault "" model.error) ]
         , button
             [ type_ "button"
             , onClick AddCalorie

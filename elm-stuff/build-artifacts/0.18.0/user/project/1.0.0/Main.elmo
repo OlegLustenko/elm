@@ -1,30 +1,33 @@
-var _user$project$Main$initModel = {totalCalories: 0, inputState: ''};
+var _user$project$Main$initModel = {input: 0, totalCalories: 0, error: _elm_lang$core$Maybe$Nothing};
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
 		switch (_p0.ctor) {
-			case 'AddCalorie':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						totalCalories: model.totalCalories + A2(
-							_elm_lang$core$Maybe$withDefault,
-							0,
-							_elm_lang$core$Result$toMaybe(
-								_elm_lang$core$String$toInt(model.inputState))),
-						inputState: ''
-					});
 			case 'UpdateInputState':
+				var _p1 = _elm_lang$core$String$toInt(_p0._0);
+				if (_p1.ctor === 'Ok') {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{input: _p1._0, error: _elm_lang$core$Maybe$Nothing});
+				} else {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							input: 0,
+							error: _elm_lang$core$Maybe$Just(_p1._0)
+						});
+				}
+			case 'Clear':
+				return _user$project$Main$initModel;
+			default:
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{inputState: _p0._0});
-			default:
-				return _user$project$Main$initModel;
+					{totalCalories: model.input, input: 0});
 		}
 	});
-var _user$project$Main$Model = F2(
-	function (a, b) {
-		return {inputState: a, totalCalories: b};
+var _user$project$Main$Model = F3(
+	function (a, b, c) {
+		return {input: a, totalCalories: b, error: c};
 	});
 var _user$project$Main$UpdateInputState = function (a) {
 	return {ctor: 'UpdateInputState', _0: a};
@@ -61,7 +64,8 @@ var _user$project$Main$view = function (model) {
 							_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$UpdateInputState),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$value(model.inputState),
+								_0: _elm_lang$html$Html_Attributes$value(
+									_elm_lang$core$Native_Utils.eq(model.input, 0) ? '' : _elm_lang$core$Basics$toString(model.input)),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -70,19 +74,12 @@ var _user$project$Main$view = function (model) {
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$button,
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$type_('button'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$AddCalorie),
-								_1: {ctor: '[]'}
-							}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Add'),
+							_0: _elm_lang$html$Html$text(
+								A2(_elm_lang$core$Maybe$withDefault, '', model.error)),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -94,16 +91,35 @@ var _user$project$Main$view = function (model) {
 								_0: _elm_lang$html$Html_Attributes$type_('button'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Clear),
+									_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$AddCalorie),
 									_1: {ctor: '[]'}
 								}
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('Clear'),
+								_0: _elm_lang$html$Html$text('Add'),
 								_1: {ctor: '[]'}
 							}),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$type_('button'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Clear),
+										_1: {ctor: '[]'}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Clear'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}
